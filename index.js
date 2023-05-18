@@ -6,7 +6,7 @@ const db = mysql.createConnection(
   {
     host: "127.0.0.1",
     user: "root",
-    password: "password",
+    password: "He@ther21899",
     database: "employees_db",
   },
   console.log(`Welcome to the employee database!`)
@@ -55,6 +55,9 @@ const startApp = async () => {
         break;
       case "I'm Finished":
         process.exit();
+        break;
+        default:
+          break;
     }
   } catch (err) {
     console.log(err);

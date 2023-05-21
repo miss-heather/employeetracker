@@ -72,7 +72,7 @@ async function viewDepartments() {
   
       console.table(results);
   
-      startApp();
+      // startApp();
     });
   }
 
@@ -87,7 +87,7 @@ async function viewRoles() {
   
       console.table(results);
   
-      startApp();
+      // startApp();
     });
   }
   
@@ -96,7 +96,7 @@ async function viewEmployeeDir() {
   try {
     const [employees] = await db.promise().query("select * from employee");
     console.table(employees);
-    startApp();
+    // startApp();
   } catch (err) {
     console.log(err);
   }
@@ -112,6 +112,7 @@ async function addDepartment() {
     .promise()
     .query(`INSERT INTO department (name) VALUES ('${ans.department}')`);
   viewDepartments();
+      startApp();
 }
 
 async function addRole() {

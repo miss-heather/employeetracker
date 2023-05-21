@@ -20,12 +20,13 @@ CREATE TABLE employee (
 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 first_name VARCHAR(30) NOT NULL,
 last_name VARCHAR(30) NOT NULL,
-role_id INT NOT NULL,
-FOREIGN KEY (role_id)
-REFERENCES role(id)
+-- role_id INT NOT NULL,
+CONSTRAINT fk_role 
+FOREIGN KEY (role_id) 
+REFERENCES roles(id),
+manager_id INTEGER
 ON DELETE CASCADE,
-manager_id INT,
-CONSTRAINT fk_manager FOREIGN KEY (manager_id)
-REFERENCES employee(id)
-ON DELETE SET NULL
+-- CONSTRAINT fk_manager FOREIGN KEY (manager_id)
+-- REFERENCES employee(id)
+-- ON DELETE SET NULL
 );

@@ -15,65 +15,67 @@ const db = mysql.createConnection(
 console.table();
 
 const startApp = async () => {
-  try {
-    const ans = await inquirer.prompt({
-      type: "list",
-      name: "todo",
-      message: "What would you like to do?",
-      choices: [
-        "View Departments",
-        "View Roles",
-        "View Employees",
-        "Add Department",
-        "Add Role",
-        "Add Employee",
-        "Update Employee Role",
-        "I'm Finished",
-      ],
-    });
-    switch (ans.todo) {
-      case "View Departments":
-        viewDepartments();
-        break;
-      case "View Roles":
-        viewRoles();
-        break;
-      case "View Employees":
-        viewEmployeeDir();
-        break;
-      case "Add Department":
-        addDepartment();
-        break;
-      case "Add Employee":
-        addEmployee();
-        break;
-      case "Add Role":
-        addRole();
-        break;
-      case "Update Employee Role":
-        updateEmployee();
-        break;
-      case "I'm Finished":
-        process.exit();
-        break;
-        default:
+  do{
+    try {
+      const ans = await inquirer.prompt({
+        type: "list",
+        name: "todo",
+        message: "What would you like to do?",
+        choices: [
+          "View Departments",
+          "View Roles",
+          "View Employees",
+          "Add Department",
+          "Add Role",
+          "Add Employee",
+          "Update Employee Role",
+          "I'm Finished",
+        ],
+      });
+      switch (ans.todo) {
+        case "View Departments":
+          await viewDepartments();
           break;
+        case "View Roles":
+          await  viewRoles();
+          break;
+        case "View Employees":
+          viewEmployeeDir();
+          break;
+        case "Add Department":
+         await addDepartment();
+          break;
+        case "Add Employee":
+          await addEmployee();
+          break;
+        case "Add Role":
+          await addRole();
+          break;
+        case "Update Employee Role":
+          updateEmployee();
+          break;
+        case "I'm Finished":
+          process.exit();
+          break;
+          default:
+            break;
+      }
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
+  }while (true)
 };
+
 
 async function viewDepartments() {
     const sql = `SELECT * FROM department`;
-  
-    db.query(sql, (err, results) => {
+  let info;
+ db.query(sql, (err, results) => {
       if (err) throw err;
-  
-      console.table(results);
-  
-      // startApp();
+  info = results
+  console.table(info)
     });
+   
   }
 
 async function viewRoles() {
@@ -82,7 +84,7 @@ async function viewRoles() {
     LEFT JOIN department ON role.department_id = department.id
     ORDER BY role.salary DESC`;
   
-    db.query(sql, (err, results) => {
+     db.query(sql, (err, results) => {
       if (err) throw err;
   
       console.table(results);
@@ -112,55 +114,111 @@ async function addDepartment() {
     .promise()
     .query(`INSERT INTO department (name) VALUES ('${ans.department}')`);
   viewDepartments();
-      startApp();
+      // startApp();
 }
 
-async function addRole() {
-    db.query("SELECT name FROM department", function (err, results) {
-        if (err) throw err;
+// async function addRole() {
+//     db.query("SELECT name FROM department", function (err, results) {
+//         if (err) throw err;
     
-        const choices = results.map((result) => result.name);
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "title",
-          message: "What is the new role's title?",
-        },
-        {
-          type: "input",
-          name: "salary",
-          message: "What is the new role's salary?",
-        },
-        {
-          type: "list",
-          name: "department",
-          message: "What is the new role's department?",
-          choices: choices,  
-        },
-      ])
-      .then((answers) => {
-        let department_id
-        for (let i=0; i < results.length; i++) {
-          if (answers.department === results[i].name) {
-            departmentID = results[i].id;
-            break
-          }
-        }
+//         const choices = results.map((result) => result.name);
+//     inquirer
+//       .prompt([
+//         {
+//           type: "input",
+//           name: "title",
+//           message: "What is the new role's title?",
+//         },
+//         {
+//           type: "input",
+//           name: "salary",
+//           message: "What is the new role's salary?",
+//         },
+//         {
+//           type: "list",
+//           name: "department",
+//           message: "What is the new role's department?",
+//           choices: choices,  
+//         },
+//       ])
+//       .then((answers) => {
+//         let department_id
+//         for (let i=0; i < results.length; i++) {
+//           if (answers.department === results[i].name) {
+//            department_id = results[i].id;
+            
+//           }
+//         }
 
-        const query = `
-          INSERT INTO role (title, salary, department_id)
-          VALUES (?, ?, (SELECT id FROM department WHERE name = ?))
-        `;
-        const values = [answers.title, answers.salary, answers.department];
-        db.query(query, values, (err, res) => {
-          if (err) throw err;
-          startApp();
-        });
+//         const query = `
+//           INSERT INTO role (title, salary, department_id)
+//           VALUES (?, ?, (SELECT id FROM department WHERE name = ?))
+//         `;
+//         const values = [answers.title, answers.salary, answers.department];
+//       db.query(query, values, (err, res) => {
+//           if (err) throw err;
+//           // startApp();
+//         })
+//       });
+//     })
+//   }
+
+async function addRole() {
+  try {
+    const results = await new Promise((resolve, reject) => {
+      db.query("SELECT name FROM department", (err, results) => {
+        if (err) reject(err);
+        resolve(results);
       });
-    })
-  }
+    });
 
+    const choices = results.map((result) => result.name);
+
+    const answers = await inquirer.prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the new role's title?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the new role's salary?",
+      },
+      {
+        type: "list",
+        name: "department",
+        message: "What is the new role's department?",
+        choices: choices,
+      },
+    ]);
+
+    // let department_id;
+    // for (let i = 0; i < results.length; i++) {
+    //   if (answers.department === results[i].name) {
+    //     department_id = results[i].id;
+    //   }
+    // }
+
+    const query = `
+      INSERT INTO role (title, salary, department_id)
+      VALUES (?, ?, (SELECT id FROM department WHERE name = ?))
+    `;
+    const values = [answers.title, answers.salary, answers.department];
+
+  await new Promise((resolve, reject) => {
+      db.query(query, values, (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+      });
+    });
+     await viewRoles()
+
+    // startApp();
+  } catch (err) {
+    throw err;
+  }
+}
 async function addEmployee() {
   const [roles] = await db.promise().query("select * from role");
   const [employees] = await db.promise().query("select * from employee");

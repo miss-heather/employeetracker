@@ -89,7 +89,6 @@ async function viewRoles() {
   
       console.table(results);
   
-      // startApp();
     });
   }
   
@@ -114,54 +113,7 @@ async function addDepartment() {
     .promise()
     .query(`INSERT INTO department (name) VALUES ('${ans.department}')`);
   viewDepartments();
-      // startApp();
 }
-
-// async function addRole() {
-//     db.query("SELECT name FROM department", function (err, results) {
-//         if (err) throw err;
-    
-//         const choices = results.map((result) => result.name);
-//     inquirer
-//       .prompt([
-//         {
-//           type: "input",
-//           name: "title",
-//           message: "What is the new role's title?",
-//         },
-//         {
-//           type: "input",
-//           name: "salary",
-//           message: "What is the new role's salary?",
-//         },
-//         {
-//           type: "list",
-//           name: "department",
-//           message: "What is the new role's department?",
-//           choices: choices,  
-//         },
-//       ])
-//       .then((answers) => {
-//         let department_id
-//         for (let i=0; i < results.length; i++) {
-//           if (answers.department === results[i].name) {
-//            department_id = results[i].id;
-            
-//           }
-//         }
-
-//         const query = `
-//           INSERT INTO role (title, salary, department_id)
-//           VALUES (?, ?, (SELECT id FROM department WHERE name = ?))
-//         `;
-//         const values = [answers.title, answers.salary, answers.department];
-//       db.query(query, values, (err, res) => {
-//           if (err) throw err;
-//           // startApp();
-//         })
-//       });
-//     })
-//   }
 
 async function addRole() {
   try {
@@ -193,13 +145,6 @@ async function addRole() {
       },
     ]);
 
-    // let department_id;
-    // for (let i = 0; i < results.length; i++) {
-    //   if (answers.department === results[i].name) {
-    //     department_id = results[i].id;
-    //   }
-    // }
-
     const query = `
       INSERT INTO role (title, salary, department_id)
       VALUES (?, ?, (SELECT id FROM department WHERE name = ?))
@@ -213,8 +158,6 @@ async function addRole() {
       });
     });
      await viewRoles()
-
-    // startApp();
   } catch (err) {
     throw err;
   }

@@ -21,6 +21,7 @@ Once the terminal is opened, enter the following commands:
 Once all of the instillations and command line instructioins are complete, the user will be presented with a list of options to choose from. This will vary from everything from viewing an employee, to modifying them and adding new employees as well. This can be done simply by utilizing the arrow keys and "enter". 
 
 Walkthrough Link: https://drive.google.com/file/d/1176BDlZvsp8VggHKQxl8H0FO6y5xhXk-/view 
+Github: https://github.com/miss-heather/employeetracker 
 
 ## License
 MIT
